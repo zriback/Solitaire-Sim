@@ -37,7 +37,7 @@ class Card:
         Translates the card into something to be printed out
         :return: str representation of the Card
         """
-        result = ""
+        result = ''
         suit = self.ID // 13
         value = self.ID % 13
 
@@ -50,7 +50,7 @@ class Card:
         elif value == 12:
             result += 'K'
         else:
-            result += str(value)
+            result += str(value+1)
 
         if suit == 0:
             result += 'S'
@@ -66,4 +66,4 @@ class Card:
         else:
             result += '-'
 
-        return value
+        return result
