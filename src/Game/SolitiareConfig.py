@@ -7,19 +7,22 @@ Author: Zach Riback
 '''
 from queue import Queue
 from queue import LifoQueue
+from random import random
 
 
 class SolitaireConfig:
 
-    def __init__(self):
-        pass
+    def __init__(self, starting_deck=""):
+        self.deck = self.make_deck(starting_deck)
+
+    def make_deck(self, starting_deck: str) -> 'Queue':
+        if starting_deck != "":  # use the starting deck config given in this string
+            with open('deck.txt') as f:
+                starting_deck = f.readline()
+
+        # now add all the cards to the cue
 
 
 if __name__ == "__main__":
     pass
-
-
-
-
-
 
