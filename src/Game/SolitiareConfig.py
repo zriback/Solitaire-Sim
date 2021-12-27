@@ -9,6 +9,8 @@ from queue import Queue
 from queue import LifoQueue
 from random import random
 
+from src.Game.Card import Card
+
 
 class SolitaireConfig:
 
@@ -21,6 +23,10 @@ class SolitaireConfig:
                 starting_deck = f.readline()
 
         # now add all the cards to the cue
+        q = Queue()
+        cards = starting_deck.split(' ')
+        for card in cards:
+            ID = Card.find_ID()
 
 
 if __name__ == "__main__":
