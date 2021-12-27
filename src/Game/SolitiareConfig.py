@@ -15,18 +15,22 @@ from src.Game.Card import Card
 class SolitaireConfig:
 
     def __init__(self, starting_deck=""):
-        self.deck = self.make_deck(starting_deck)
+        self.deck = SolitaireConfig.make_deck(starting_deck)
 
-    def make_deck(self, starting_deck: str) -> 'Queue':
-        if starting_deck != "":  # use the starting deck config given in this string
-            with open('deck.txt') as f:
+    @staticmethod
+    def make_deck(starting_deck: str) -> 'Queue':
+        if starting_deck == "":  # use the starting deck config given in this string
+            with open('../Data/deck.txt') as f:
                 starting_deck = f.readline()
 
         # now add all the cards to the cue
         q = Queue()
         cards = starting_deck.split(' ')
         for card in cards:
-            ID = Card.find_ID()
+            ID = Card.find_ID(card)
+            q.put(Card(ID))
+
+        return q
 
 
 if __name__ == "__main__":

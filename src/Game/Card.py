@@ -111,5 +111,4 @@ class Card:
             result += '+'
         else:
             result += '-'
-
         return result
