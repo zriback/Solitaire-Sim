@@ -68,14 +68,14 @@ class Card:
             return 1  # red
 
     @staticmethod
-    def check_valid_parent(card1: 'Card', card2: 'Card') -> bool:
+    def check_valid_parent(child: 'Card', parent: 'Card') -> bool:
         """
         Checks if two Cards are valid parents of each other
-        :param card1: First card we are checking
-        :param card2: Second card we are checking
+        :param child: First card we are checking
+        :param parent: Second card we are checking
         :return: True if valid parent, false otherwise
         """
-        if card1.get_color() != card2.get_color():
+        if child.get_color() != parent.get_color() and child.ID % 13 == (parent.ID % 13) - 1:
             return True
         else:
             return False
@@ -111,4 +111,8 @@ class Card:
             result += '+'
         else:
             result += '-'
-        return result
+        return '[' + result + ']'
+
+
+if __name__ == "__main__":
+    pass
