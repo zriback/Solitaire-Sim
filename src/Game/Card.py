@@ -53,9 +53,10 @@ class Card:
         self.ID = ID
         self.faceup = False
 
-    def flip(self) -> None:
-        """ Flips the Card over"""
+    def flip(self) -> 'Card':
+        """ Flips the Card over and returns it"""
         self.faceup = not self.faceup
+        return self
 
     def get_color(self) -> int:
         """
@@ -95,7 +96,7 @@ class Card:
 
         return ID
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Translates the card into something to be printed out
         :return: str representation of the Card

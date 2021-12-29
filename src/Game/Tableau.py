@@ -3,13 +3,16 @@ from src.Game.Card import Card
 
 
 class Tableau:
+    """
+    Represents the main seven piles in the game of solitaire
+    """
 
     def __init__(self):
         self.piles = []
         for _ in range(7):
             self.piles.append(deque())
 
-    def deal(self, deck: deque['Card']) -> None:
+    def initial_deal(self, deck: deque['Card']) -> None:
         """
         Performs the initial deal given an initial deck to start from
         :return: None
@@ -19,7 +22,7 @@ class Tableau:
                 self.piles[i].append(deck.popleft())
             self.piles[i][-1].flip()  # flip the final card over to being face up
 
-    def __str__(self):
+    def __str__(self) -> str:
         result = ''
         for pile in self.piles:
             for card in pile:
