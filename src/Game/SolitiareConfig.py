@@ -5,14 +5,15 @@ Also gives functionality for finding all the next legal moves, and is able to ge
     those legal moves
 Author: Zach Riback
 """
+import random
 from collections import deque
 from random import random
-import random
+import copy
 
 from src.Game.Card import Card
-from src.Game.Tableau import Tableau
-from src.Game.Hand import Hand
 from src.Game.Foundation import Foundation
+from src.Game.Hand import Hand
+from src.Game.Tableau import Tableau
 
 
 class SolitaireConfig:
@@ -43,6 +44,30 @@ class SolitaireConfig:
             q.append(Card(ID))
 
         return q
+
+    def get_successors(self) -> list['SolitaireConfig']:
+        """
+        Finds all legal moves and generates the resulting configs from playing those moves
+        :return: A list of SolitaireConfigs representing the games stemming from playing each legal move that it finds
+        """
+        # first make a deep copy of this solitaire config
+        clone = copy.deepcopy(self)
+
+        # moving cards within the tableau
+        first_cards = self.tableau.get_first_cards()
+        for card in first_cards:
+            if Tableau.check_valid_tableau_parent()
+
+
+        # moving cards from the tableau to the foundation
+
+
+        # moving cards from the stock
+
+
+        # moving cards from the foundation to the tableau (sometimes legal to do this)
+
+
 
     def __str__(self):
         """

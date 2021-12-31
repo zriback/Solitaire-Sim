@@ -54,9 +54,19 @@ class Card:
         self.faceup = False
 
     def flip(self) -> 'Card':
-        """ Flips the Card over and returns it"""
+        """
+        Flips over the card
+        :return: The card
+        """
         self.faceup = not self.faceup
         return self
+
+    def is_face_up(self) -> bool:
+        """
+        Accessor method for faceup
+        :return: True if the card is face up, false if face down
+        """
+        return self.faceup
 
     def get_color(self) -> int:
         """
@@ -67,27 +77,6 @@ class Card:
             return 0  # black
         else:
             return 1  # red
-
-    @staticmethod
-    def check_valid_tableau_parent(child: 'Card', parent: 'Card') -> bool:
-        """
-        Checks if two cards can be in a valid child - parent relationship in the tableau
-            it is valid if the parent's value is one higher and is the opposite color
-        :param child: Card checking to be the child
-        :param parent: Card checking to be the parent
-        :return: True if valid relationship, false otherwise
-        """
-        return child.get_color() != parent.get_color() and child.get_value() == parent.get_value() - 1
-
-    @staticmethod
-    def check_valid_foundation_parent(child: 'Card', parent: 'Card') -> bool:
-        """
-        Checks if two cards can be in a valid child - parent relationship in the foundation
-        :param child: Card checking to be the child
-        :param parent: Card checking to be the parent
-        :return: True if valid relationship, false otherwise
-        """
-        return child.get_suit() == parent.get_suit() and child.get_value() == parent.get_value() + 1
 
     @staticmethod
     def find_ID(card_string: str) -> int:

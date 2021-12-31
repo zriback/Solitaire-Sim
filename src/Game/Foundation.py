@@ -14,17 +14,41 @@ class Foundation:
         for _ in range(4):
             self.piles.append(deque())
 
-    def valid_spot(self, card: 'Card') -> bool:
+    # def valid_spot(self, card: 'Card') -> bool:
+    #     """
+    #     Given a card determines if there is a valid place for it in the foundation piles
+    #     :param card: the given card
+    #     :return: true if there is a valid place, false otherwise
+    #     """
+    #     for pile in self.piles:
+    #         if card.get_value() == 0 and len(pile) == 0:  # the card is an ace and the pile is empty
+    #             return True
+    #         elif len(pile) != 0 and Card.check_valid_foundation_parent(card, pile[-1]):
+    #             return True
+
+    @staticmethod
+    def check_valid_parent(child: 'Card', parent: 'Card') -> bool:
         """
-        Given a card determines if there is a valid place for it in the foundation piles
-        :param card: the given card
-        :return: true if there is a valid place, false otherwise
+        Checks if two cards can be in a valid child - parent relationship in the foundation
+        :param child: Card checking to be the child
+        :param parent: Card checking to be the parent
+        :return: True if valid relationship, false otherwise
         """
+        return child.get_suit() == parent.get_suit() and child.get_value() == parent.get_value() + 1
+
+    def get_last_cards(self):
+        """
+        Gets a list of the last Cards in the foundation piles
+        A None object in the list denotes an empty pile (no cards in the pile)
+        :return: A list of the last cards in the foundation piles
+        """
+        last_cards = []
         for pile in self.piles:
-            if card.get_value() == 0 and len(pile) == 0:  # the card is an ace and the pile is empty
-                return True
-            elif len(pile) != 0 and Card.check_valid_foundation_parent(card, pile[-1]):
-                return True
+            if len(pile) != 0:
+                last_cards.append(pile[-1])
+            else:
+                last_cards.append(None)
+        return last_cards
 
     def __str__(self):
         """
@@ -33,6 +57,7 @@ class Foundation:
         """
         result = ''
         for pile in self.piles:
+            result += "Foundation: "
             for card in pile:
                 result += str(card)
             result += '\n'
