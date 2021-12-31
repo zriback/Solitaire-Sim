@@ -7,9 +7,12 @@ Author: Zach Riback
 """
 from collections import deque
 from random import random
+import random
 
 from src.Game.Card import Card
-import random
+from src.Game.Tableau import Tableau
+from src.Game.Hand import Hand
+from src.Game.Foundation import Foundation
 
 
 class SolitaireConfig:
@@ -19,6 +22,10 @@ class SolitaireConfig:
         self.deck = SolitaireConfig.make_deck(starting_deck)
 
         # now the tableau is dealt out
+        self.tableau = Tableau()
+        self.tableau.initial_deal(self.deck)
+        self.hand = Hand(self.deck)
+        self.foundation = Foundation()
 
     @staticmethod
     def make_deck(starting_deck: str) -> 'deque':
@@ -36,6 +43,13 @@ class SolitaireConfig:
             q.append(Card(ID))
 
         return q
+
+    def __str__(self):
+        """
+        Gets string representation of a solitaire config
+        :return: string representation of a SolitaireConfig
+        """
+        return str(self.foundation) + str(self.tableau) + str(self.hand)
 
 
 if __name__ == "__main__":

@@ -7,12 +7,7 @@ from src.Game.Hand import Hand
 
 def main():
     s = SolitaireConfig()
-    t = Tableau()
-    t.initial_deal(s.deck)
-    print(t)
-
-    h = Hand(s.deck)
-    print(h)
+    print(str(s))
 
 
 if __name__ == "__main__":

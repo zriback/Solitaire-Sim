@@ -63,23 +63,31 @@ class Card:
         Returns value based on if this card is black (spade, club) or red (heart, diamond)
         :return: 0 if black, 1 if red
         """
-        if self.ID // 13 == 0 or self.ID // 13 == 3:
+        if self.get_suit() == 0 or self.get_suit() == 3:
             return 0  # black
         else:
             return 1  # red
 
     @staticmethod
-    def check_valid_parent(child: 'Card', parent: 'Card') -> bool:
+    def check_valid_tableau_parent(child: 'Card', parent: 'Card') -> bool:
         """
-        Checks if two Cards are valid parents of each other
-        :param child: First card we are checking
-        :param parent: Second card we are checking
-        :return: True if valid parent, false otherwise
+        Checks if two cards can be in a valid child - parent relationship in the tableau
+            it is valid if the parent's value is one higher and is the opposite color
+        :param child: Card checking to be the child
+        :param parent: Card checking to be the parent
+        :return: True if valid relationship, false otherwise
         """
-        if child.get_color() != parent.get_color() and child.ID % 13 == (parent.ID % 13) - 1:
-            return True
-        else:
-            return False
+        return child.get_color() != parent.get_color() and child.get_value() == parent.get_value() - 1
+
+    @staticmethod
+    def check_valid_foundation_parent(child: 'Card', parent: 'Card') -> bool:
+        """
+        Checks if two cards can be in a valid child - parent relationship in the foundation
+        :param child: Card checking to be the child
+        :param parent: Card checking to be the parent
+        :return: True if valid relationship, false otherwise
+        """
+        return child.get_suit() == parent.get_suit() and child.get_value() == parent.get_value() + 1
 
     @staticmethod
     def find_ID(card_string: str) -> int:
@@ -96,14 +104,28 @@ class Card:
 
         return ID
 
+    def get_value(self) -> int:
+        """
+        Calculates the numeric equivalent for the value of this card using the ID
+        :return: the value
+        """
+        return self.ID % 13
+
+    def get_suit(self) -> int:
+        """
+        Calculates the numeric equivalent of the suit for this card using the ID
+        :return: the suit
+        """
+        return self.ID // 13
+
     def __str__(self) -> str:
         """
         Translates the card into something to be printed out
         :return: str representation of the Card
         """
         result = ''
-        suit = self.ID // 13
-        value = self.ID % 13
+        suit = self.get_suit()
+        value = self.get_value()
 
         result += list(Card.values.keys())[list(Card.values.values()).index(value)]
         result += list(Card.suits.keys())[list(Card.suits.values()).index(suit)]
