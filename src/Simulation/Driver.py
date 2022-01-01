@@ -6,23 +6,24 @@ from src.Simulation.Solver import Solver
 from src.Game.Hand import Hand
 from src.Game.Card import Card
 import copy
+import sys
+import time
 
 
 def main():
-    s = SolitaireConfig()
-    print(str(s))
-    solver = Solver(s)
-    steps = solver.solve()
+    won = 0
+    total = 0
 
-    if len(steps) == 0:
-        print('Unsolvable')
-    else:
-        step_num = 0
-        for step in steps:
-            print('Step: ' + str(step_num))
-            print(str(step))
-            print()
-            step_num += 1
+    start_time = time.time()
+    for _ in range(1):
+        s = SolitaireConfig()
+        solver = Solver(s)
+        if solver.solve() is not None:
+            won += 1
+        total += 1
+
+    print('Winning %: ' + str((won/total)*100))
+    print('Execution took ' + str(time.time() - start_time) + ' seconds')
 
 
 

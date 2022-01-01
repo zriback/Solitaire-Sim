@@ -61,6 +61,13 @@ class Hand:
         """
         return self.waste.popleft()
 
+    def has_cards(self) -> bool:
+        """
+        Determines if the hand has any cards in the waste or stock piles
+        :return: True if it has cards, false otherwise
+        """
+        return not len(self.waste) == len(self.stock) == 0
+
     def __str__(self) -> str:
         """
         Gets string representation for the Hand
@@ -81,14 +88,14 @@ class Hand:
         """
         return hash(tuple(self.stock)) + hash(tuple(self.waste))
 
-    def __eq(self, other) -> bool:
+    def __eq__(self, other) -> bool:
         """
         Method for determining if two hands are equal
         Two hands are equal if the stock and waste piles are equal between them
         :param other: other hand to compare with
         :return: True if the hands are equal, false otherwise
         """
-        return isinstance(other, Hand) and self.stock == other.stock and self.waste == other.waste
+        return isinstance(other, Hand) and self.stock == other.stock and self.stock == other.stock
 
 if __name__ == '__main__':
     pass

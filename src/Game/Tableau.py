@@ -35,7 +35,7 @@ class Tableau:
         if child is None:
             return False
         elif parent is None:
-            return child.get_value == 12  # if it is a king the relationship is valid
+            return child.get_value() == 12  # if it is a king the relationship is valid
         else:
             return child.get_color() != parent.get_color() and child.get_value() == parent.get_value() - 1
 
@@ -87,7 +87,7 @@ class Tableau:
         :return: the last card from the pile with the above index
         """
         card = self.piles[index].pop()
-        if len(self.piles[index]) != 0:
+        if len(self.piles[index]) != 0 and not self.piles[index][-1].is_faceup():
             self.piles[index][-1].flip()
         return card
 
@@ -134,7 +134,8 @@ class Tableau:
         :param other: other tableau to compare with
         :return: True if the tableaus are equal, false otherwise
         """
-        return isinstance(other, Tableau) and self.piles == other.piles
+        return isinstance(other, Tableau) and (len(self.piles) == len(other.piles) and
+                                               all(x in self.piles for x in other.piles))
 
 
 if __name__ == '__main__':

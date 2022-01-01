@@ -87,10 +87,12 @@ class Foundation:
         """
         Method for determining equality between two Foundations
         Two foundations are equal if all the piles are the same
+            the order the piles are in should not matter
         :param other: other foundation to compare to
         :return: True if foundations are equal, false otherwise
         """
-        return isinstance(other, Foundation) and self.piles == other.piles
+        return isinstance(other, Foundation) and (len(self.piles) == len(other.piles) and
+                                                  all(x in self.piles for x in other.piles))
 
 
 if __name__ == '__main__':

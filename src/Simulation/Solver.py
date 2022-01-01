@@ -22,15 +22,25 @@ class Solver:
             returns None
         """
         num = 0
+        amount_max = 3
         while len(self.queue) > 0 and not self.queue[0].is_win():
+            amount = 0
+            print("queue length: " + str(len(self.queue)))
             num += 1
-            print(str(num))
+            # print(str(num))
             current = self.queue.popleft()
-            print(str(current) + "\n\n ")
-            for config in current.get_successors():
+            # print(str(current) + "\n\n ")
+
+            successors = current.get_successors()
+            for config in successors:
                 if config not in self.map.keys():
+                    amount += 1
                     self.map[config] = current
                     self.queue.append(config)
+
+                    # only add one
+                    if amount >= amount_max:
+                        break
 
         # if the queue is empty then a solution was never found
         if len(self.queue) == 0:
@@ -43,3 +53,14 @@ class Solver:
                 steps.appendleft(next_step)
                 next_step = self.map.get(next_step)
             return list(steps)
+
+    def solve_dfs(self, config: 'SolitaireConfig'):
+
+        if config.is_win():
+            return True
+        else:
+            for successor in config.get_successors():
+                sol = self.solve_dfs(successor)
+                if sol:
+                    return True
+        return False
