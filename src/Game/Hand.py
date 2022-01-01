@@ -57,6 +57,13 @@ class Hand:
             result += str(card)
         return result
 
+    def __hash__(self) -> int:
+        """
+        Compute the hash code for this hand by hashing all the cards in the stock and waste
+        :return: the hash code
+        """
+        return hash(tuple(self.stock)) + hash(tuple(self.waste))
+
 
 if __name__ == '__main__':
     pass

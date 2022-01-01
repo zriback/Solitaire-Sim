@@ -22,14 +22,6 @@ class Tableau:
                 self.piles[i].append(deck.popleft())
             self.piles[i][-1].flip()  # flip the final card over to being face up
 
-    def __str__(self) -> str:
-        result = ''
-        for pile in self.piles:
-            for card in pile:
-                result += str(card)
-            result += '\n'
-        return result
-
     @staticmethod
     def check_valid_parent(child: 'Card', parent: 'Card') -> bool:
         """
@@ -39,7 +31,10 @@ class Tableau:
         :param parent: Card checking to be the parent
         :return: True if valid relationship, false otherwise
         """
-        return child.get_color() != parent.get_color() and child.get_value() == parent.get_value() - 1
+        if child is None or parent is None:
+            return False
+        else:
+            return child.get_color() != parent.get_color() and child.get_value() == parent.get_value() - 1
 
     def get_last_cards(self) -> list['Card']:
         """
@@ -65,12 +60,74 @@ class Tableau:
         for pile in self.piles:
             if len(pile) != 0:
                 for card in pile:
-                    if card.is_face_up():
+                    if card.is_faceup():
                         first_cards.append(card)
                         break
             else:
                 first_cards.append(None)
         return first_cards
+
+    def put_card(self, card: 'Card', index: int) -> None:
+        """
+        Puts a given card into the tableau at the end of the given pile
+        :param card: the card to put into the tableau
+        :param index: index of the pile to put the new card
+        :return: None
+        """
+        self.piles[index].append(card)
+
+    def take_card(self, index: int) -> 'Card':
+        """
+        Gets the last card from the pile with the associated index
+        Flips over the last card to being face up if there is one
+        :param index: index of pile to get the card from
+        :return: the last card from the pile with the above index
+        """
+        card = self.piles[index].pop()
+        self.piles[index][-1].flip()
+        return card
+
+    def move_pile(self, from_index: int, to_index: int) -> None:
+        """
+        Moves all the face up cards from one pile to the end of another pile
+        :param from_index: pile to move the cards from
+        :param to_index: pile to move the cards to
+        :return: None
+        """
+        faceup_index = -1  # should be reassigned before being used
+        # first need to find the index of the first face up card
+        for i in range(len(self.piles[from_index])):
+            if self.piles[from_index][i].is_faceup():
+                faceup_index = i
+                break
+        cards = deque()
+        while self.piles[from_index][-1].is_faceup():
+            cards.appendleft(self.piles[from_index].pop())
+        if len(self.piles[from_index]) != 0:
+            self.piles[from_index][-1].flip()
+        self.piles[to_index].extend(cards)
+
+    def __str__(self) -> str:
+        """
+        Gets a string representation for this tableau
+        :return: a string that represents the cards in the tableau
+        """
+        result = ''
+        for pile in self.piles:
+            for card in pile:
+                result += str(card)
+            result += '\n'
+        return result
+
+    def __hash__(self):
+        """
+        Gets the hash for this tableau using the cards in all the piles
+        :return: the hash for this tableau
+        """
+        hashcode = 0
+        for pile in self.piles:
+            hashcode += hash(tuple(pile))
+        return hashcode
 
 
 if __name__ == '__main__':

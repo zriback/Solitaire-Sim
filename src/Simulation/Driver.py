@@ -8,15 +8,9 @@ import copy
 
 
 def main():
-    # s = SolitaireConfig()
-    # print(str(s))
-
-    s1 = SolitaireConfig()
-    s2 = copy.deepcopy(s1)
-
-    s1.foundation.piles[0] = "5"
-    print(s1)
-    print(s2)
+    s = SolitaireConfig()
+    s.tableau.move_pile(2, 1)
+    print(str(s))
 
 
 if __name__ == "__main__":

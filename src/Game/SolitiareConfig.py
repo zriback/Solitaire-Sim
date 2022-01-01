@@ -7,7 +7,6 @@ Author: Zach Riback
 """
 import random
 from collections import deque
-from random import random
 import copy
 
 from src.Game.Card import Card
@@ -50,13 +49,23 @@ class SolitaireConfig:
         Finds all legal moves and generates the resulting configs from playing those moves
         :return: A list of SolitaireConfigs representing the games stemming from playing each legal move that it finds
         """
-        # first make a deep copy of this solitaire config
-        clone = copy.deepcopy(self)
-
+        successors = []
         # moving cards within the tableau
+        last_cards = self.tableau.get_last_cards()
+        for i in range(len(last_cards)):
+            for j in range(len(last_cards)):
+                if Tableau.check_valid_parent(last_cards[i], last_cards[j]):
+                    clone = copy.deepcopy(self)
+                    # takes the i (child) card and moves it under the j (parent) card
+                    clone.tableau.put_card(clone.tableau.take_card(i), j)
+                    successors.append(clone)
+
+        # moving whole stacks within the tableau
         first_cards = self.tableau.get_first_cards()
-        for card in first_cards:
-            if Tableau.check_valid_tableau_parent()
+        for i in range(len(first_cards)):
+            for j in range(len(last_cards)):
+                if Tableau.check_valid_parent(first_cards[i], last_cards[j]):
+                    clone = copy.deepcopy(self)
 
 
         # moving cards from the tableau to the foundation
@@ -67,7 +76,7 @@ class SolitaireConfig:
 
         # moving cards from the foundation to the tableau (sometimes legal to do this)
 
-
+        return successors
 
     def __str__(self):
         """
@@ -75,6 +84,9 @@ class SolitaireConfig:
         :return: string representation of a SolitaireConfig
         """
         return str(self.foundation) + str(self.tableau) + str(self.hand)
+
+    def __hash__(self):
+        return hash(self.tableau) + hash(self.foundation) + hash(self.hand)
 
 
 if __name__ == "__main__":

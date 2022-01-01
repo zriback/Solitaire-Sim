@@ -34,7 +34,10 @@ class Foundation:
         :param parent: Card checking to be the parent
         :return: True if valid relationship, false otherwise
         """
-        return child.get_suit() == parent.get_suit() and child.get_value() == parent.get_value() + 1
+        if child is None or parent is None:
+            return False
+        else:
+            return child.get_suit() == parent.get_suit() and child.get_value() == parent.get_value() + 1
 
     def get_last_cards(self):
         """
@@ -62,6 +65,16 @@ class Foundation:
                 result += str(card)
             result += '\n'
         return result
+
+    def __hash__(self) -> int:
+        """
+        Gets the hashcode for this foundation using the cards in all the piles
+        :return: hash for this foundation
+        """
+        hashcode = 0
+        for pile in self.piles:
+            hashcode += hash(tuple(pile))
+        return hashcode
 
 
 if __name__ == '__main__':

@@ -61,7 +61,7 @@ class Card:
         self.faceup = not self.faceup
         return self
 
-    def is_face_up(self) -> bool:
+    def is_faceup(self) -> bool:
         """
         Accessor method for faceup
         :return: True if the card is face up, false if face down
@@ -124,6 +124,13 @@ class Card:
         else:
             result += '-'
         return '[' + result + ']'
+
+    def __hash__(self) -> int:
+        """
+        Compute the hash code for this card using the ID
+        :return: the hash code computed from the ID
+        """
+        return hash(self.ID) + hash(self.faceup)
 
 
 if __name__ == "__main__":
