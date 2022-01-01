@@ -81,6 +81,14 @@ class Hand:
         """
         return hash(tuple(self.stock)) + hash(tuple(self.waste))
 
+    def __eq(self, other) -> bool:
+        """
+        Method for determining if two hands are equal
+        Two hands are equal if the stock and waste piles are equal between them
+        :param other: other hand to compare with
+        :return: True if the hands are equal, false otherwise
+        """
+        return isinstance(other, Hand) and self.stock == other.stock and self.waste == other.waste
 
 if __name__ == '__main__':
     pass

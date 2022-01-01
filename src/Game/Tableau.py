@@ -98,14 +98,8 @@ class Tableau:
         :param to_index: pile to move the cards to
         :return: None
         """
-        faceup_index = -1  # should be reassigned before being used
-        # first need to find the index of the first face up card
-        for i in range(len(self.piles[from_index])):
-            if self.piles[from_index][i].is_faceup():
-                faceup_index = i
-                break
         cards = deque()
-        while self.piles[from_index][-1].is_faceup():
+        while len(self.piles[from_index]) > 0 and self.piles[from_index][-1].is_faceup():
             cards.appendleft(self.piles[from_index].pop())
         if len(self.piles[from_index]) != 0:
             self.piles[from_index][-1].flip()
@@ -132,6 +126,15 @@ class Tableau:
         for pile in self.piles:
             hashcode += hash(tuple(pile))
         return hashcode
+
+    def __eq__(self, other) -> bool:
+        """
+        Method for determining equality between two tableaus
+        Two tableaus are equal if all the piles are equal
+        :param other: other tableau to compare with
+        :return: True if the tableaus are equal, false otherwise
+        """
+        return isinstance(other, Tableau) and self.piles == other.piles
 
 
 if __name__ == '__main__':

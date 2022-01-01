@@ -132,6 +132,15 @@ class Card:
         """
         return hash(self.ID) + hash(self.faceup)
 
+    def __eq__(self, other) -> bool:
+        """
+        Method for determining equality between two cards
+        Two cards are equal if they have the same ID and are flipped the same way
+        :param other: other card we are comparing to
+        :return: True if the two cards are equal, false otherwise
+        """
+        return isinstance(other, Card) and self.ID == other.ID and self.faceup == other.faceup
+
 
 if __name__ == "__main__":
     pass

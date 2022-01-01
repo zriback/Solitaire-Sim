@@ -111,6 +111,17 @@ class SolitaireConfig:
 
         return successors
 
+    def is_win(self) -> bool:
+        """
+        Finds if the game has been won
+        The game is won if the last card in all the foundation piles is the king (has a value of 12)
+        :return: true if the game is won, false otherwise
+        """
+        for card in self.foundation.get_last_cards():
+            if card is None or card.get_value() != 12:
+                return False
+        return True
+
     def __str__(self):
         """
         Gets string representation of a solitaire config
@@ -121,6 +132,14 @@ class SolitaireConfig:
     def __hash__(self):
         return hash(self.tableau) + hash(self.foundation) + hash(self.hand)
 
+    def __eq__(self, other) -> bool:
+        """
+        Method for determining equality between two SolitaireConfigs
+        Two SolitaireConfigs are equal if their hands, tableaus, and foundations are equal
+        :param other: other SolitaireConfig to compare with
+        :return: True if they are equal, false otherwise
+        """
+        return isinstance(other, SolitaireConfig) and self.hand == other.hand and self.foundation == other.foundation and self.tableau == other.tableau
 
 if __name__ == "__main__":
     pass

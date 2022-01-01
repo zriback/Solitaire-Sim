@@ -14,18 +14,6 @@ class Foundation:
         for _ in range(4):
             self.piles.append(deque())
 
-    # def valid_spot(self, card: 'Card') -> bool:
-    #     """
-    #     Given a card determines if there is a valid place for it in the foundation piles
-    #     :param card: the given card
-    #     :return: true if there is a valid place, false otherwise
-    #     """
-    #     for pile in self.piles:
-    #         if card.get_value() == 0 and len(pile) == 0:  # the card is an ace and the pile is empty
-    #             return True
-    #         elif len(pile) != 0 and Card.check_valid_foundation_parent(card, pile[-1]):
-    #             return True
-
     @staticmethod
     def check_valid_parent(child: 'Card', parent: 'Card') -> bool:
         """
@@ -94,6 +82,15 @@ class Foundation:
         for pile in self.piles:
             hashcode += hash(tuple(pile))
         return hashcode
+
+    def __eq__(self, other) -> bool:
+        """
+        Method for determining equality between two Foundations
+        Two foundations are equal if all the piles are the same
+        :param other: other foundation to compare to
+        :return: True if foundations are equal, false otherwise
+        """
+        return isinstance(other, Foundation) and self.piles == other.piles
 
 
 if __name__ == '__main__':
