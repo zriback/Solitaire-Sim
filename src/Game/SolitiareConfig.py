@@ -50,8 +50,10 @@ class SolitaireConfig:
         :return: A list of SolitaireConfigs representing the games stemming from playing each legal move that it finds
         """
         successors = []
-        # moving cards within the tableau
         last_cards = self.tableau.get_last_cards()
+        first_cards = self.tableau.get_first_cards()
+
+        # moving cards within the tableau
         for i in range(len(last_cards)):
             for j in range(len(last_cards)):
                 if Tableau.check_valid_parent(last_cards[i], last_cards[j]):
@@ -61,20 +63,36 @@ class SolitaireConfig:
                     successors.append(clone)
 
         # moving whole stacks within the tableau
-        first_cards = self.tableau.get_first_cards()
         for i in range(len(first_cards)):
             for j in range(len(last_cards)):
                 if Tableau.check_valid_parent(first_cards[i], last_cards[j]):
                     clone = copy.deepcopy(self)
+                    clone.tableau.move_pile(i, j)
+                    successors.append(clone)
 
-
+        foundation_last_cards = self.foundation.get_last_cards()
         # moving cards from the tableau to the foundation
+        for i in range(len(last_cards)):
+            for j in range(len(foundation_last_cards)):
+                if Foundation.check_valid_parent(last_cards[i], foundation_last_cards[j]):
+                    clone = copy.deepcopy(self)
+                    # take the i (child) card and move it to the foundation at the end of pile j
+                    clone.foundation.put_card(clone.tableau.take_card(i), j)
+                    successors.append(clone)
 
+        # moving cards from the foundation to the tableau (depending on the rules you're allowed to do this)
+        for i in range(len(foundation_last_cards)):
+            for j in range(len(last_cards)):
+                if Tableau.check_valid_parent(foundation_last_cards[i], last_cards[j]):
+                    clone = copy.deepcopy(self)
+                    # take the i (child) card from the foundation pile and move it to the end of the jth tableau pile
+                    clone.tableau.put_card(clone.foundation.take_card(i), j)
+                    successors.append(clone)
 
-        # moving cards from the stock
+        # moving cards from the hand (left over cards)
+        # one move is to either take one card from the waste pile and play it, or to deal out more cards from the stock
+        #   into the waste pile.
 
-
-        # moving cards from the foundation to the tableau (sometimes legal to do this)
 
         return successors
 

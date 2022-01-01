@@ -53,6 +53,23 @@ class Foundation:
                 last_cards.append(None)
         return last_cards
 
+    def put_card(self, card: 'Card', index: int) -> None:
+        """
+        Puts a card at the end of one of the piles in the foundation
+        :param card: the card to add
+        :param index: the index of the pile to add the card at the end of
+        :return: None
+        """
+        self.piles[index].append(card)
+
+    def take_card(self, index: int) -> 'Card':
+        """
+        Takes card from the end of the given pile
+        :param index: index of the pile to take from
+        :return: the card taken from the end of the pile
+        """
+        return self.piles[index].pop()
+
     def __str__(self):
         """
         Gets a string representation of the foundation
