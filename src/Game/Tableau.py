@@ -27,12 +27,15 @@ class Tableau:
         """
         Checks if two cards can be in a valid child - parent relationship in the tableau
             it is valid if the parent's value is one higher and is the opposite color
+            Also valid if child is a king and parent is None
         :param child: Card checking to be the child
         :param parent: Card checking to be the parent
         :return: True if valid relationship, false otherwise
         """
-        if child is None or parent is None:
+        if child is None:
             return False
+        elif parent is None:
+            return child.get_value == 12  # if it is a king the relationship is valid
         else:
             return child.get_color() != parent.get_color() and child.get_value() == parent.get_value() - 1
 
@@ -84,7 +87,8 @@ class Tableau:
         :return: the last card from the pile with the above index
         """
         card = self.piles[index].pop()
-        self.piles[index][-1].flip()
+        if len(self.piles[index]) != 0:
+            self.piles[index][-1].flip()
         return card
 
     def move_pile(self, from_index: int, to_index: int) -> None:

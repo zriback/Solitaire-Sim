@@ -92,7 +92,22 @@ class SolitaireConfig:
         # moving cards from the hand (left over cards)
         # one move is to either take one card from the waste pile and play it, or to deal out more cards from the stock
         #   into the waste pile.
-
+        hand_card = self.hand.get_card()
+        if hand_card is not None:
+            for i in range(len(last_cards)):
+                if Tableau.check_valid_parent(hand_card, last_cards[i]):
+                    clone = copy.deepcopy(self)
+                    clone.tableau.put_card(clone.hand.take_card(), i)
+                    successors.append(clone)
+            for i in range(len(foundation_last_cards)):
+                if Foundation.check_valid_parent(hand_card, foundation_last_cards[i]):
+                    clone = copy.deepcopy(self)
+                    clone.foundation.put_card(clone.hand.take_card(), i)
+                    successors.append(clone)
+        # now for the successor where you just deal out cards from the hand without playing
+        clone = copy.deepcopy(self)
+        clone.hand.deal()
+        successors.append(clone)
 
         return successors
 

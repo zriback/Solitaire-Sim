@@ -9,8 +9,11 @@ import copy
 
 def main():
     s = SolitaireConfig()
-    s.tableau.move_pile(2, 1)
     print(str(s))
+    sucs = s.get_successors()
+
+    for suc in sucs:
+        print(str(suc))
 
 
 if __name__ == "__main__":

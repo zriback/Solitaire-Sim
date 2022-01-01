@@ -44,6 +44,23 @@ class Hand:
         self.stock.extendleft(self.waste)
         self.waste.clear()
 
+    def get_card(self) -> 'Card' or None:
+        """
+        Accessor method for the top card in the waste pile
+        :return: the top face up card from the waste pile
+        """
+        if len(self.waste) != 0:
+            return self.waste[0]
+        else:
+            return None
+
+    def take_card(self) -> 'Card':
+        """
+        Gets but also removes the top card from the waste pile
+        :return: top face up card from the waste pile
+        """
+        return self.waste.popleft()
+
     def __str__(self) -> str:
         """
         Gets string representation for the Hand

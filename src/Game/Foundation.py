@@ -34,8 +34,10 @@ class Foundation:
         :param parent: Card checking to be the parent
         :return: True if valid relationship, false otherwise
         """
-        if child is None or parent is None:
+        if child is None:
             return False
+        elif parent is None:
+            return child.get_value() == 0
         else:
             return child.get_suit() == parent.get_suit() and child.get_value() == parent.get_value() + 1
 
