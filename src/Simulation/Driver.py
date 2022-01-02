@@ -1,33 +1,39 @@
-import os
-from collections import deque
-from src.Game.Tableau import Tableau
 from src.Game.SolitiareConfig import SolitaireConfig
 from src.Simulation.Solver import Solver
-from src.Game.Hand import Hand
-from src.Game.Card import Card
-import copy
-import sys
-import time
 
 
 def main():
-    deck = '2S 9C QH 4H JC 10D KS 8S 5S AH 2D 9S KH 4D 3S QC KD 7C 8H JD 6S 10C 6D 7S 8D AS 3D 5C 6H JH 5D 9H 3C AD 7H JS QS 2H 4S 4C 9D AC 6C 10H QD 10S 7D 5H 2C 8C 3H KC'
+
+    deck = "2S 9C 4H KS 2D QC 10C QH JC 8S 9S KD 6D 10D 5S KH 7C 7S AH 4D 8H 8D 3S JD AS 6S 3D 5C 6H JH 5D 9H 3C AD " \
+           "7H JS QS 2H 4S 4C 9D AC 6C 10H QD 10S 7D 5H 2C 8C 3H KC"
 
     s = SolitaireConfig(deck)
-    solver = Solver(s)
-    start_time = time.time()
-    steps = solver.solve()
+
+    solver3 = Solver(s)
+    solver3.set_pruning_threshold(3)
+
+    solver2 = Solver(s)
+    solver2.set_pruning_threshold(2)
+
+    solver1 = Solver(s)
+    solver1.set_pruning_threshold(1)
+
+    solver0 = Solver(s)
+    solver0.set_pruning_threshold(0)
+
+    steps = None
+
+    #
 
     if steps is None:
         print('No solution')
-    else:
+    else:  # then there was a solution
         step_num = 0
         for step in steps:
             print('Step ' + str(step_num))
             print(str(step) + '\n\n')
             step_num += 1
 
-    print('Execution took ' + str(time.time() - start_time) + ' seconds')
 
 if __name__ == "__main__":
     main()

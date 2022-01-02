@@ -56,7 +56,7 @@ class Card:
     def flip(self) -> 'Card':
         """
         Flips over the card
-        :return: The card
+        :return: The card itself
         """
         self.faceup = not self.faceup
         return self

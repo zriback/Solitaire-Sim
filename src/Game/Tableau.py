@@ -15,12 +15,15 @@ class Tableau:
     def initial_deal(self, deck: deque['Card']) -> None:
         """
         Performs the initial deal given an initial deck to start from
+        Deals it out how a normal human would in a real solitaire game, putting one card on each pile in each pass
         :return: None
         """
         for i in range(7):
-            for j in range(i + 1):
-                self.piles[i].append(deck.popleft())
-            self.piles[i][-1].flip()  # flip the final card over to being face up
+            for j in range(i, 7):
+                if i == j:
+                    self.piles[j].append(deck.popleft().flip())
+                else:
+                    self.piles[j].append(deck.popleft())
 
     @staticmethod
     def check_valid_parent(child: 'Card', parent: 'Card') -> bool:

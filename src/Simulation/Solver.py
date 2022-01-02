@@ -1,6 +1,8 @@
 from collections import deque
 from src.Game.SolitiareConfig import SolitaireConfig
 import copy
+import time
+
 
 class Solver:
     """
@@ -12,6 +14,10 @@ class Solver:
         self.queue = deque()
         self.queue.append(config)
 
+        self.pruning_threshold = 2
+        self.pruning_interval = 1000
+        self.verbose = False
+
         # predecessor map used for keeping track of already visited configs and building the step path at the end
         self.map = {config: None}
 
@@ -21,64 +27,91 @@ class Solver:
         :return: list of SolitaireConfigs representing steps to reach the solution. If no solution could be found,
             returns None
         """
+        start_time = time.time()
+
         max_cards_in_foundation = 0
-        num = 0
         total_added_to_queue = 0
+        total_configs_checked = 0
         while len(self.queue) > 0 and not self.queue[0].is_win():
+
+            total_configs_checked += 1
             current = self.queue.popleft()
-            # print(str(current))
-            config_added = False
             successors = current.get_successors()
             added = 0
+
+            self.verbose_print('Total configs checked: ', total_configs_checked)
+            self.verbose_print('Current config: ', current)
 
             if current.foundation.get_num_cards() > max_cards_in_foundation:
                 max_cards_in_foundation = current.foundation.get_num_cards()
 
             for index in range(len(successors)):
                 if successors[index] not in self.map:
-                    if index == len(successors) - 1:
-                        if not config_added or True:
-                            self.map[successors[index]] = current
-                            self.queue.append(successors[index])
-                            added += 1
-
-                    else:
-                        self.map[successors[index]] = current
-                        self.queue.append(successors[index])
-                        config_added = True
-                        added += 1
+                    self.map[successors[index]] = current
+                    self.queue.append(successors[index])
+                    added += 1
             total_added_to_queue += added
-
-            num += 1
 
             # PRUNING
             # every once in a while get rid of configs in the queue that do not have very many cards in the foundation
-            if total_added_to_queue > 1000:
+            if total_added_to_queue > self.pruning_interval:
                 queue_copy = copy.copy(self.queue)
                 for config in queue_copy:
-                    if config.foundation.get_num_cards() < max_cards_in_foundation - 3:
+                    if config.foundation.get_num_cards() < max_cards_in_foundation - self.pruning_threshold:
                         self.queue.remove(config)
                 total_added_to_queue = 0
 
-        # if the queue is empty then a solution was never found
-        if len(self.queue) == 0:
-            return None
-        else:
+        result = None
+        if len(self.queue) != 0:  # then a solution was found
             steps = deque()
             steps.appendleft(self.queue[0])
             next_step = self.map.get(self.queue[0])
             while next_step is not None:
                 steps.appendleft(next_step)
                 next_step = self.map.get(next_step)
-            return list(steps)
+            result = list(steps)
+        print('Execution took ' + str(time.time() - start_time) + ' seconds.')
+        return result
 
-    def solve_dfs(self, config: 'SolitaireConfig'):
+    def set_verbose(self, value: bool) -> None:
+        """
+        Sets whether this solver will be verbose with output
+        Defaults to False
+        :param value: value for verbose (to set verbose to)
+        :return: None
+        """
+        self.verbose = value
 
-        if config.is_win():
-            return True
-        else:
-            for successor in config.get_successors():
-                sol = self.solve_dfs(successor)
-                if sol:
-                    return True
-        return False
+    def verbose_print(self, msg: str, value: any) -> None:
+        """
+        Conditional printing method depending on the value of self.verbose
+        Mostly used for debugging or when more information is needed
+        Note that printing slows down the solver
+        :param msg: message to print with the value
+        :param value: value to print along with the message
+        :return: None
+        """
+        if self.verbose:
+            print(msg + str(value))
+
+    def set_pruning_threshold(self, value: int) -> None:
+        """
+        Sets the pruning threshold for discarding games with not enough cards in the foundation
+        Defaults to 2
+        :param value: value to set pruning threshold to
+        :return: None
+        """
+        self.pruning_threshold = value
+
+    def set_pruning_interval(self, value: int) -> None:
+        """
+        Sets the pruning interval for how often to prune the queue of configs
+        Defaults to 1000
+        :param value: value to set the interval to
+        :return: None
+        """
+        self.pruning_interval = value
+
+
+if __name__ == '__main__':
+    pass
