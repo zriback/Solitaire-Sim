@@ -60,6 +60,16 @@ class Foundation:
         """
         return self.piles[index].pop()
 
+    def get_num_cards(self) -> int:
+        """
+        Gets the total number of cards in the foundation
+        :return: total number of cards in the foundation
+        """
+        cards = 0
+        for pile in self.piles:
+            cards += len(pile)
+        return cards
+
     def __str__(self):
         """
         Gets a string representation of the foundation

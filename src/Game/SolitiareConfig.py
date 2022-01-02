@@ -56,6 +56,8 @@ class SolitaireConfig:
         hand_card = self.hand.get_card()
 
         # moving cards from the tableau to the foundation
+        # moving cards within the tableau
+        # moving stacks within the tableau
         for i in range(len(last_cards)):
             for j in range(len(foundation_last_cards)):
                 if Foundation.check_valid_parent(last_cards[i], foundation_last_cards[j]):
@@ -65,49 +67,43 @@ class SolitaireConfig:
                     successors.append(clone)
                     # if card found a valid parent in the foundation, it does not need to keep searching
                     break
-
-        # moving cards within the tableau
-        for i in range(len(last_cards)):
-            # if the first and last face up cards are NOT equal, this pile of face ups is more than 1 and so we cannot
-            # just take the bottom one and move it to another pile within the tableau. Therefore, skip this loop
-            # Also, if the card is an ace no point in moving it to another pile in the tableau, so skip this loop
-            if first_cards[i] != last_cards[i] or (last_cards[i] is not None and last_cards[i].get_value() == 0):
-                continue
-            for j in range(len(last_cards)):
-                if Tableau.check_valid_parent(last_cards[i], last_cards[j]):
-                    clone = copy.deepcopy(self)
-                    # takes the i (child) card and moves it under the j (parent) card
-                    clone.tableau.put_card(clone.tableau.take_card(i), j)
-                    successors.append(clone)
-
-        # moving whole stacks within the tableau
-        for i in range(len(first_cards)):
-            # if the first and last card are equal then this move would have been handled in the previous loop
-            # so... skip this loop trying to move this pile
-            if first_cards[i] == last_cards[i]:
-                continue
-            for j in range(len(last_cards)):
-                if Tableau.check_valid_parent(first_cards[i], last_cards[j]):
-                    clone = copy.deepcopy(self)
-                    clone.tableau.move_pile(i, j)
-                    successors.append(clone)
+            else:  # for loop finished without finding a place in the foundation, so now look in tableau
+                if first_cards[i] == last_cards[i]:  # single card can be moved by itself
+                    for j in range(len(last_cards)):
+                        if Tableau.check_valid_parent(last_cards[i], last_cards[j]):
+                            clone = copy.deepcopy(self)
+                            # takes the i (child) card and moves it under the j (parent) card
+                            clone.tableau.put_card(clone.tableau.take_card(i), j)
+                            successors.append(clone)
+                            # if a card found a place in the tableau, no point in moving it to another card in the tableau
+                            #   just one is enough, so break
+                            break
+                else:  # long stack must be moved together
+                    for j in range(len(last_cards)):
+                        if Tableau.check_valid_parent(first_cards[i], last_cards[j]):
+                            clone = copy.deepcopy(self)
+                            clone.tableau.move_pile(i, j)
+                            successors.append(clone)
+                            break
 
         # moving cards from the hand (left over cards)
         # one move is to either take one card from the waste pile and play it, or to deal out more cards from the stock
         #   into the waste pile.
         if hand_card is not None:
             # no point in putting ace in the tableau from the hand
-            if hand_card.get_value() != 0:
-                for i in range(len(last_cards)):
-                    if Tableau.check_valid_parent(hand_card, last_cards[i]):
-                        clone = copy.deepcopy(self)
-                        clone.tableau.put_card(clone.hand.take_card(), i)
-                        successors.append(clone)
             for i in range(len(foundation_last_cards)):
                 if Foundation.check_valid_parent(hand_card, foundation_last_cards[i]):
                     clone = copy.deepcopy(self)
                     clone.foundation.put_card(clone.hand.take_card(), i)
                     successors.append(clone)
+                    break
+            else:
+                for i in range(len(last_cards)):
+                    if Tableau.check_valid_parent(hand_card, last_cards[i]):
+                        clone = copy.deepcopy(self)
+                        clone.tableau.put_card(clone.hand.take_card(), i)
+                        successors.append(clone)
+                        break
 
         # moving cards from the foundation to the tableau (depending on the rules you're allowed to do this)
         # for i in range(len(foundation_last_cards)):

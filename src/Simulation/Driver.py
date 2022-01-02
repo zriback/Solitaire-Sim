@@ -29,8 +29,5 @@ def main():
 
     print('Execution took ' + str(time.time() - start_time) + ' seconds')
 
-
-
-
 if __name__ == "__main__":
     main()
