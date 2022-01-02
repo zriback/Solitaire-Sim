@@ -22,25 +22,40 @@ class Solver:
             returns None
         """
         num = 0
-        amount_max = 3
         while len(self.queue) > 0 and not self.queue[0].is_win():
-            amount = 0
-            print("queue length: " + str(len(self.queue)))
+            # print("queue length: " + str(len(self.queue)))
             num += 1
-            # print(str(num))
+            # print()
+            # print()
+            print('Number of current config: ' + str(num))
+            # print('Queue length: ' + str(len(self.queue)))
             current = self.queue.popleft()
-            # print(str(current) + "\n\n ")
-
+            # print(str(current))
+            config_added = False
             successors = current.get_successors()
-            for config in successors:
-                if config not in self.map.keys():
-                    amount += 1
-                    self.map[config] = current
-                    self.queue.append(config)
-
-                    # only add one
-                    if amount >= amount_max:
-                        break
+            added = 0
+            # print('------------------------------------------------')
+            for index in range(len(successors)):
+                if successors[index] not in self.map:
+                    if index == len(successors) - 1:
+                        if not config_added or True:
+                            self.map[successors[index]] = current
+                            self.queue.append(successors[index])
+                            added += 1
+                            # print(successors[index])
+                            # print('--------')
+                    else:
+                        self.map[successors[index]] = current
+                        self.queue.append(successors[index])
+                        config_added = True
+                        added += 1
+                        # print(successors[index])
+                        # print('--------')
+            if added == 0:
+                pass
+                # print('Added nothing to the queue from this config.')
+            # print("Unique successors added from this config: " + str(added))
+            # print('-----------------------------------------------------')
 
         # if the queue is empty then a solution was never found
         if len(self.queue) == 0:
