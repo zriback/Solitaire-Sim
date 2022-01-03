@@ -33,6 +33,8 @@ class SolitaireConfig:
             with open('../Data/default_deck.txt') as f:
                 cards = f.readline().split(' ')
                 random.shuffle(cards)
+                print(str(cards) + '\ n')
+
         else:
             cards = starting_deck.split(' ')
 
@@ -106,17 +108,18 @@ class SolitaireConfig:
                         break
 
         # moving cards from the foundation to the tableau (depending on the rules you're allowed to do this)
-        # for i in range(len(foundation_last_cards)):
-        #     # if the card is an ace or a two, there is no point in moving it back down to the tableau, so skip this loop
-        #     if foundation_last_cards[i] is not None and (foundation_last_cards[i].get_value() == 0
-        #                                                  or foundation_last_cards[i].get_value() == 1):
-        #         continue
-        #     for j in range(len(last_cards)):
-        #         if Tableau.check_valid_parent(foundation_last_cards[i], last_cards[j]):
-        #             clone = copy.deepcopy(self)
-        #             # take the i (child) card from the foundation pile and move it to the end of the jth tableau pile
-        #             clone.tableau.put_card(clone.foundation.take_card(i), j)
-        #             successors.append(clone)
+        for i in range(len(foundation_last_cards)):
+            # if the card is an ace or a two, there is no point in moving it back down to the tableau, so skip this loop
+            if foundation_last_cards[i] is not None and (foundation_last_cards[i].get_value() == 0
+                                                         or foundation_last_cards[i].get_value() == 1):
+                continue
+            for j in range(len(last_cards)):
+                if Tableau.check_valid_parent(foundation_last_cards[i], last_cards[j]):
+                    clone = copy.deepcopy(self)
+                    # take the i (child) card from the foundation pile and move it to the end of the jth tableau pile
+                    clone.tableau.put_card(clone.foundation.take_card(i), j)
+                    successors.append(clone)
+                    break
 
         if self.hand.has_cards():
             clone = copy.deepcopy(self)

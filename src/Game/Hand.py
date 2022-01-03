@@ -68,6 +68,13 @@ class Hand:
         """
         return not len(self.waste) == len(self.stock) == 0
 
+    def get_num_cards(self) -> int:
+        """
+        Counts the amount of cards contained in the hand (in both the stock and waste piles combined)
+        :return: number of cards in this hand
+        """
+        return len(self.stock) + len(self.waste)
+
     def __str__(self) -> str:
         """
         Gets string representation for the Hand

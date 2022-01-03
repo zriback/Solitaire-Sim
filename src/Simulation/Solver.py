@@ -30,6 +30,7 @@ class Solver:
         start_time = time.time()
 
         max_cards_in_foundation = 0
+        min_cards_in_hand = 24
         total_added_to_queue = 0
         total_configs_checked = 0
         while len(self.queue) > 0 and not self.queue[0].is_win():
@@ -39,26 +40,38 @@ class Solver:
             successors = current.get_successors()
             added = 0
 
-            self.verbose_print('Total configs checked: ', total_configs_checked)
-            self.verbose_print('Current config: ', current)
+            self.verbose_print('\n\nTotal configs checked: ', total_configs_checked)
+            self.verbose_print('Queue length: ', len(self.queue))
+            self.verbose_print('Current config:\n', current)
 
             if current.foundation.get_num_cards() > max_cards_in_foundation:
                 max_cards_in_foundation = current.foundation.get_num_cards()
 
-            for index in range(len(successors)):
-                if successors[index] not in self.map:
-                    self.map[successors[index]] = current
-                    self.queue.append(successors[index])
+            if current.hand.get_num_cards() < min_cards_in_hand:
+                min_cards_in_hand = current.hand.get_num_cards()
+
+            for successor in successors:
+                if successor not in self.map:
+                    self.map[successor] = current
+                    self.queue.append(successor)
                     added += 1
+
+            self.verbose_print('Successors added by this game: ', added)
             total_added_to_queue += added
 
             # PRUNING
             # every once in a while get rid of configs in the queue that do not have very many cards in the foundation
             if total_added_to_queue > self.pruning_interval:
+                games_pruned = 0
                 queue_copy = copy.copy(self.queue)
                 for config in queue_copy:
+                    # or config.hand.get_num_cards() > min_cards_in_hand + self.pruning_threshold
                     if config.foundation.get_num_cards() < max_cards_in_foundation - self.pruning_threshold:
                         self.queue.remove(config)
+                        games_pruned += 1
+                self.verbose_print('Games have been pruned out of the queue. Games pruned: ', games_pruned)
+                self.verbose_print('Max cards in foundation: ', max_cards_in_foundation)
+
                 total_added_to_queue = 0
 
         result = None
