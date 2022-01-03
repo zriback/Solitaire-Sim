@@ -8,6 +8,8 @@ class Solver:
     """
     Class to handling the solving of the SolitairePuzzle
     Uses Breadth First Search (BFS) algorithm to find the shortest amount of steps in order to solve the puzzle
+    Algorithm has been modified to prune away unlikely to win games in order to make it faster and feasible to run
+    large amounts of games in reasonable amounts of time
     """
     def __init__(self, config: 'SolitaireConfig'):
         # queue that keeps track of configs that still need to be looked at by the solver

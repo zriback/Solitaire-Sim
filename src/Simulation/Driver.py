@@ -1,5 +1,6 @@
 from src.Game.SolitiareConfig import SolitaireConfig
 from src.Simulation.Solver import Solver
+from src.Simulation.MultiSolver import MultiSolver
 
 
 def main():
@@ -25,39 +26,39 @@ def main():
     # deck = "2S 9C 4H KS 2D QC 10C QH JC 8S 9S KD 6D 10D 5S KH 7C 7S AH 4D 8H 8D 3S JD AS 6S 3D 5C 6H JH 5D 9H 3C AD " \
     #        "7H JS QS 2H 4S 4C 9D AC 6C 10H QD 10S 7D 5H 2C 8C 3H KC"
     #
-    s = SolitaireConfig()
-
-    solver3 = Solver(s)
-    solver3.set_pruning_threshold(3)
-
-    solver2 = Solver(s)
-    solver2.set_pruning_threshold(2)
-
-    solver1 = Solver(s)
-    solver1.set_pruning_threshold(1)
-
-    solver0 = Solver(s)
-    solver0.set_pruning_threshold(0)
-
-    if solver0.solve() is not None:
-        print('Solved using a threshold of 0.\n')
-    else:
-        print('No solution found using a threshold of 0.\n')
-
-    if solver1.solve() is not None:
-        print('Solved using a threshold of 1.\n')
-    else:
-        print('No solution found using a threshold of 1.\n')
-
-    if solver2.solve() is not None:
-        print('Solved using a threshold of 2.\n')
-    else:
-        print('No solution found using a threshold of 2.\n')
-
-    if solver3.solve() is not None:
-        print('Solved using a threshold of 3.\n ')
-    else:
-        print('No solution found using a threshold of 3.\n')
+    # s = SolitaireConfig()
+    #
+    # solver3 = Solver(s)
+    # solver3.set_pruning_threshold(3)
+    #
+    # solver2 = Solver(s)
+    # solver2.set_pruning_threshold(2)
+    #
+    # solver1 = Solver(s)
+    # solver1.set_pruning_threshold(1)
+    #
+    # solver0 = Solver(s)
+    # solver0.set_pruning_threshold(0)
+    #
+    # if solver0.solve() is not None:
+    #     print('Solved using a threshold of 0.\n')
+    # else:
+    #     print('No solution found using a threshold of 0.\n')
+    #
+    # if solver1.solve() is not None:
+    #     print('Solved using a threshold of 1.\n')
+    # else:
+    #     print('No solution found using a threshold of 1.\n')
+    #
+    # if solver2.solve() is not None:
+    #     print('Solved using a threshold of 2.\n')
+    # else:
+    #     print('No solution found using a threshold of 2.\n')
+    #
+    # if solver3.solve() is not None:
+    #     print('Solved using a threshold of 3.\n ')
+    # else:
+    #     print('No solution found using a threshold of 3.\n')
 
     # if steps is None:
     #     print('No solution')
@@ -67,6 +68,9 @@ def main():
     #         print('Step ' + str(step_num))
     #         print(str(step) + '\n\n')
     #         step_num += 1
+
+    ms = MultiSolver(4, 4)  # x games using y threads
+    ms.start()
 
 
 if __name__ == "__main__":
