@@ -1,4 +1,4 @@
-import threading
+from multiprocessing import Process, Lock, Queue
 from Solver import Solver
 from src.Game.SolitiareConfig import SolitaireConfig
 import time
@@ -14,14 +14,15 @@ class MultiSolver:
         Initialize the multi solver
         :param num_threads: number of threads to make
         """
-        self.threads = []
+        self.processes = []
+        self.queue = Queue()
         for _ in range(num_threads):
-            self.threads.append(threading.Thread(target=self.multi_solve, args=(amount//num_threads,)))
+            self.processes.append(Process(target=self.multi_solve, args=(amount//num_threads, self.queue)))
 
         self.total_won = 0
         self.total_played = 0
 
-        self.lock = threading.Lock()
+        self.lock = Lock()
 
     def start(self):
         """
@@ -29,28 +30,43 @@ class MultiSolver:
         :return: None
         """
         start_time = time.time()
-        for thread in self.threads:
-            thread.start()
-        for thread in self.threads:
-            thread.join()
+        for process in self.processes:
+            process.start()
+        for process in self.processes:
+            process.join()
+
+        # read in results from the queue once everything has finished
+        while not self.queue.empty():
+            result = self.queue.get()
+            if result:
+                self.total_won += 1
+            self.total_played += 1
+
         print('Execution complete. Total execution time was ' + str(time.time() - start_time) + ' seconds.')
         print('\nWon ' + str(self.total_won) + ' out of ' + str(self.total_played) + ' games.')
         print('Win rate: ' + str(self.total_won/self.total_played))
 
-    def multi_solve(self, amount: int) -> None:
+    def multi_solve(self, amount: int, queue: 'Queue') -> None:
         """
         Plays multiple solitaire games
-        Results of games won and games played are adde
+        Results of games won and games played are added
         :param amount: amount of solitaire games to play
+        :param queue: multi processing used to communicate results back to the original process
         :return: None
         """
         for _ in range(amount):
             solver = Solver(SolitaireConfig())
-            solver.set_pruning_threshold(0)
+            solver.set_pruning_threshold(1)
             result = solver.solve()
             self.lock.acquire()
             if result is not None:  # then the game was won
-                self.total_won += 1
-            self.total_played += 1
+                queue.put(True)
+            else:
+                queue.put(False)
             self.lock.release()
-        return None
+
+    # I have no idea why you have to do this but without it you get a "TypeError: Cannot pickle 'weakref' object"
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state['processes'] = None
+        return state

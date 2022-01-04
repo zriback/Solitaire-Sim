@@ -69,7 +69,7 @@ def main():
     #         print(str(step) + '\n\n')
     #         step_num += 1
 
-    ms = MultiSolver(4, 4)  # x games using y threads
+    ms = MultiSolver(30, 10 )  # x games using y threads
     ms.start()
 
 

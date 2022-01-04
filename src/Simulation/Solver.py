@@ -37,6 +37,11 @@ class Solver:
         total_configs_checked = 0
         while len(self.queue) > 0 and not self.queue[0].is_win():
 
+            # just kill it if it is taking too long
+            if time.time() - start_time > 500:
+                print('Killed a solver.')
+                break
+
             total_configs_checked += 1
             current = self.queue.popleft()
             successors = current.get_successors()
