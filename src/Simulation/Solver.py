@@ -16,8 +16,8 @@ class Solver:
         self.queue = deque()
         self.queue.append(config)
 
-        self.pruning_threshold = 2
-        self.pruning_interval = 1000
+        self.pruning_threshold = 1
+        self.pruning_interval = 500
         self.verbose = False
 
         # predecessor map used for keeping track of already visited configs and building the step path at the end
@@ -35,11 +35,13 @@ class Solver:
         min_cards_in_hand = 24
         total_added_to_queue = 0
         total_configs_checked = 0
+        killed_solver = False
         while len(self.queue) > 0 and not self.queue[0].is_win():
 
             # just kill it if it is taking too long
             if time.time() - start_time > 500:
                 print('Killed a solver.')
+                killed_solver = True
                 break
 
             total_configs_checked += 1
@@ -58,6 +60,7 @@ class Solver:
                 min_cards_in_hand = current.hand.get_num_cards()
 
             for successor in successors:
+                # second part of this statement is the pruning which happens whenever something is added to the queue
                 if successor not in self.map:
                     self.map[successor] = current
                     self.queue.append(successor)
@@ -82,7 +85,7 @@ class Solver:
                 total_added_to_queue = 0
 
         result = None
-        if len(self.queue) != 0:  # then a solution was found
+        if len(self.queue) != 0 and not killed_solver:  # then a solution was found
             steps = deque()
             steps.appendleft(self.queue[0])
             next_step = self.map.get(self.queue[0])
@@ -91,6 +94,7 @@ class Solver:
                 next_step = self.map.get(next_step)
             result = list(steps)
         print('Execution took ' + str(time.time() - start_time) + ' seconds.')
+        print('steps: ' + str(len(result)) if result is not None else 'None')
         return result
 
     def set_verbose(self, value: bool) -> None:
@@ -117,7 +121,7 @@ class Solver:
     def set_pruning_threshold(self, value: int) -> None:
         """
         Sets the pruning threshold for discarding games with not enough cards in the foundation
-        Defaults to 2
+        Defaults to 1
         :param value: value to set pruning threshold to
         :return: None
         """
